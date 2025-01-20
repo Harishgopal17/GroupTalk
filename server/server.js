@@ -21,12 +21,20 @@ const io = new Server(server, {
 
 io.on('connection', (socket) => {
   console.log(`A user connected ${socket.id}`);
+
+  socket.on('user joined', (username) => {
+    socket.username = username;
+    socket.broadcast.emit('user joined', username); // Notify other users
+  });
+
   socket.on('chat message', (msg) => {
-    console.log(`New message ${msg}`);
     io.emit('chat message', msg);
   });
+
   socket.on('disconnect', () => {
-    console.log(`A user disconnected ${socket.id}`);
+    if (socket.username) {
+      socket.broadcast.emit('user left', socket.username); // Notify other users
+    }
   });
 });
 

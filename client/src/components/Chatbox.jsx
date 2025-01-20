@@ -14,6 +14,8 @@ export default function Chatbox() {
     const newSocket = io("http://localhost:3000");
     setSocket(newSocket);
 
+    newSocket.emit("user joined", uname);
+
     // Clean up the socket connection on component unmount
     return () => newSocket.disconnect();
   }, []);
@@ -25,10 +27,40 @@ export default function Chatbox() {
       setMessages((prevMessages) => [...prevMessages, message]);
     };
 
-    socket.on("chat message", handleChatMessage);
+    const handleUserJoined = (username) => {
+      const joinMessage = {
+        id: Date.now(),
+        text: `${username} has joined the chat`,
+        from: "system",
+        timestamp: new Date().toLocaleTimeString(),
+      };
+      setMessages((prevMessages) => [...prevMessages, joinMessage]);
+    };
+
+    const handleUserLeft = (username) => {
+      const leftMessage = {
+        id: Date.now(),
+        text: `${username} left the chat`,
+        from: "system",
+        timestamp: new Date().toLocaleTimeString(),
+      };
+      setMessages((prevMessages) => [...prevMessages, leftMessage]);
+    };
+
+    // Add a listener if not already set
+    if (!socket.hasListeners("chat message")) {
+      socket.on("chat message", handleChatMessage);
+    }
+
+    socket.on("user joined", handleUserJoined);
+    socket.on("user left", handleUserLeft);
+
+    socket.on();
 
     return () => {
-      socket.off("chat message", handleChatMessage); // Clean up the listener
+      socket.off("chat message", handleChatMessage);
+      socket.off("user joined", handleUserJoined);
+      socket.off("user left", handleUserLeft);
     };
   }, [socket]);
 
@@ -44,11 +76,12 @@ export default function Chatbox() {
         id: Date.now(),
         text: message,
         from: user,
-        timestamp: new Date().toLocaleTimeString(),
+        timestamp: new Date().toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: true,
+        }),
       };
-      setMessages((prevMessages) => [...prevMessages, newMessage]);
-
-      // Emit the message to the server
       if (socket?.connected) {
         socket.emit("chat message", newMessage);
       }
@@ -56,17 +89,8 @@ export default function Chatbox() {
     }
   }
 
-  function toggleBtn(e) {
-    e.preventDefault();
-    if (socket.connected) {
-      socket.disconnect();
-    } else {
-      socket.connect();
-    }
-  }
-
   return (
-    <div className="max-w-[1200px] mx-auto h-screen bg-white flex flex-col">
+    <div className="max-w-[1000px] mx-auto h-screen bg-white flex flex-col">
       <header className="flex justify-between items-center bg-green px-10 py-6">
         <div className="flex">
           <span>🗨️</span>
@@ -76,33 +100,48 @@ export default function Chatbox() {
           <h3>Room Name</h3>
         </div>
       </header>
-      <div className="flex-1 overflow-y-auto bg-gray-100 p-4">
+      <div className="flex-1 overflow-y-auto bg-gray-100 p-5">
         {messages.map((message) => (
           <div
             key={message.id}
-            className={`flex flex-col mb-4 ${
-              message.from === user ? "items-end" : "items-start"
+            className={`flex flex-col mb-1  ${
+              message.from === "system"
+                ? "items-center"
+                : message.from === user
+                ? "items-end"
+                : "items-start"
             }`}
           >
-            <span>{message.from}</span>
             <div
-              className={`rounded-lg px-4 py-2 max-w-md ${
-                message.from === user
-                  ? "bg-blue-500 text-white"
-                  : "bg-gray-300 text-gray-800"
+              className={`flex flex-col max-w-md ${
+                message.from === "system"
+                  ? "system"
+                  : message.from === user
+                  ? "sent-message"
+                  : "received-message"
               }`}
             >
-              {message.text}
+              <span className="self-start pb-1 font-medium">{`${
+                message.from === "system"
+                  ? ""
+                  : message.from !== user
+                  ? message.from
+                  : ""
+              }`}</span>
+              <div className="text-base leading-5">{message.text}</div>
+              <span className=" self-end text-[11px] leading-4 pl-0 text-[#373b3e]">
+                {`${message.from === "system" ? "" : message.timestamp}`}
+              </span>
             </div>
-            <span className="text-xs text-gray-500 mt-1">
-              {message.timestamp}
-            </span>
           </div>
         ))}
         <div ref={chatEndRef} /> {/* For auto-scroll */}
       </div>
-      <div className="bg-white p-4 flex">
-        <form onSubmit={(e) => sendMessage(e)} className="flex items-center">
+      <div className="bg-white p-4">
+        <form
+          onSubmit={(e) => sendMessage(e)}
+          className="w-full flex items-center"
+        >
           <input
             type="text"
             placeholder="Type your message..."
@@ -114,13 +153,46 @@ export default function Chatbox() {
             Send
           </button>
         </form>
-        <button
-          className="px-4 py-2 bg-green rounded-lg hover:bg-green"
-          onClick={(e) => toggleBtn(e)}
-        >
-          {socket?.connected ? "Disconnect" : "Connect"}
-        </button>
       </div>
     </div>
   );
 }
+
+//  const [messages, setMessages] = useState([
+//    {
+//      id: "1737357218084",
+//      text: "Harish has joined the chat",
+//      from: "system",
+//      timestamp: "12:40 PM",
+//    },
+//    {
+//      id: "1737357218085",
+//      text: "Vicky has joined the chat",
+//      from: "system",
+//      timestamp: "12:41 PM",
+//    },
+//    {
+//      id: "1737357218086",
+//      text: "Hii hweuvhawdo jgaiyvhsd kjabdvn loram dsnvhasbv AHDVUIJASHDVO JHDSVKDSJBVKnsjdvn ksjvnisknv nsldjvsnkdjfv sjdvnksjvn ksjbvksf",
+//      from: "vickyroomate",
+//      timestamp: "12:41 PM",
+//    },
+//    {
+//      id: "1737357218089",
+//      text: "Hii da",
+//      from: "Harish",
+//      timestamp: "12:42 PM",
+//    },
+//    {
+//      id: "1737357218088",
+//      text: "Byee",
+//      from: "vicky",
+//      timestamp: "12:43 PM",
+//    },
+//    {
+//      id: "1737357218098",
+//      text: "Byee da",
+//      from: "Harish",
+//      timestamp: "12:43 PM",
+//    },
+//  ]);
