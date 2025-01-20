@@ -1,13 +1,10 @@
+import React from "react";
 import Chatbox from "./components/Chatbox";
 
-function App() {
+export default function App() {
   return (
     <>
-      <div className="bg-slate-200 h-screen">
-        <Chatbox />
-      </div>
+      <Chatbox />
     </>
   );
 }
-
-export default App;
