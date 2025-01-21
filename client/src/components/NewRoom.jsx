@@ -52,7 +52,7 @@ export default function NewRoom({
             </p>
           </div>
           <div className="flex items-center justify-between bg-[#dde3ea] px-6 py-1 w-full rounded-lg leading-5 max-md:px-2 max-md:text-base">
-            <p>{`${BASE_URI}/${roomId}`}</p>
+            <p>{`https://joingrouptalk.netlify.app//${roomId}`}</p>
             {iscopied ? (
               <span className="cursor-pointer rounded-full self-center p-2 hover:bg-[#cbcfd3] transition-colors duration-300">
                 <FaCheck size={24} />

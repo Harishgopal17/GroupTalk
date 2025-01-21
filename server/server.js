@@ -14,7 +14,7 @@ const server = http.createServer(app);
 const io = new Server(server, {
   connectionStateRecovery: {},
   cors: {
-    origin: 'https://grouptalk.netlify.app',
+    origin: 'https://joingrouptalk.netlify.app',
     methods: ['GET', 'POST'],
   },
 });
