@@ -14,26 +14,34 @@ const server = http.createServer(app);
 const io = new Server(server, {
   connectionStateRecovery: {},
   cors: {
-    origin: 'http://localhost:5173',
+    origin: 'https://grouptalk.netlify.app',
     methods: ['GET', 'POST'],
   },
 });
 
 io.on('connection', (socket) => {
-  console.log(`A user connected ${socket.id}`);
-
-  socket.on('user joined', (username) => {
+  // Listen for user joining a room
+  socket.on('join room', ({ username, roomId }) => {
     socket.username = username;
-    socket.broadcast.emit('user joined', username); // Notify other users
+    socket.roomId = roomId;
+
+    // Join the user to the specified room
+    socket.join(roomId);
+
+    // Notify others in the room
+    socket.to(roomId).emit('user joined', username);
   });
 
-  socket.on('chat message', (msg) => {
-    io.emit('chat message', msg);
+  // Handle chat messages
+  socket.on('chat message', ({ roomId, msg }) => {
+    // Broadcast the message to the room
+    io.to(roomId).emit('chat message', msg);
   });
 
+  // Handle user disconnect
   socket.on('disconnect', () => {
-    if (socket.username) {
-      socket.broadcast.emit('user left', socket.username); // Notify other users
+    if (socket.roomId && socket.username) {
+      socket.to(socket.roomId).emit('user left', socket.username);
     }
   });
 });
