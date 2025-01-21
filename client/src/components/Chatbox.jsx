@@ -4,7 +4,7 @@ import { io } from "socket.io-client";
 import NameInput from "./NameInput";
 import groupTalkLogo from "./../assets/groupTalkLogo.png";
 
-export default function Chatbox({ BASE_URI }) {
+export default function Chatbox({ BACKEND_URI }) {
   const [user, setUser] = useState("");
   const [isNameSubmitted, setIsNameSubmitted] = useState(false);
   const [messages, setMessages] = useState([]);
@@ -22,7 +22,7 @@ export default function Chatbox({ BASE_URI }) {
 
   useEffect(() => {
     if (isNameSubmitted) {
-      const newSocket = io(BASE_URI);
+      const newSocket = io(BACKEND_URI);
       setSocket(newSocket);
 
       newSocket.emit("join room", { username: user, roomId });

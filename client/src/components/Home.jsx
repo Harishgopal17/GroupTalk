@@ -5,7 +5,7 @@ import groupTalkLogo from "./../assets/groupTalkLogo.png";
 import groupDiscussion from "./../assets/groupDiscussion.svg";
 
 export default function Home({
-  BASE_URI,
+  FRONTEND_URI,
   roomId,
   showModel,
   setShowModel,
@@ -104,7 +104,7 @@ export default function Home({
       </div>
       {showModel && (
         <NewRoom
-          BASE_URI={BASE_URI}
+          FRONTEND_URI={FRONTEND_URI}
           roomId={roomId}
           iscopied={iscopied}
           setIsCopied={setIsCopied}

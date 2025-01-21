@@ -4,7 +4,7 @@ import { IoMdClose } from "react-icons/io";
 import { FaCheck } from "react-icons/fa6";
 
 export default function NewRoom({
-  BASE_URI,
+  FRONTEND_URI,
   setShowModel,
   roomId,
   iscopied,
@@ -52,7 +52,7 @@ export default function NewRoom({
             </p>
           </div>
           <div className="flex items-center justify-between bg-[#dde3ea] px-6 py-1 w-full rounded-lg leading-5 max-md:px-2 max-md:text-base">
-            <p>{`https://joingrouptalk.netlify.app//${roomId}`}</p>
+            <p>{`${FRONTEND_URI}/${roomId}`}</p>
             {iscopied ? (
               <span className="cursor-pointer rounded-full self-center p-2 hover:bg-[#cbcfd3] transition-colors duration-300">
                 <FaCheck size={24} />

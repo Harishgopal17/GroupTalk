@@ -4,7 +4,8 @@ import Chatbox from "./components/Chatbox";
 import Home from "./components/Home";
 
 export default function App() {
-  const BASE_URI = "https://grouptalk-backend.onrender.com";
+  const BACKEND_URI = "https://grouptalk-backend.onrender.com";
+  const FRONTEND_URI = "https://joingrouptalk.netlify.app/";
   const [iscopied, setIsCopied] = useState(false);
   const [showModel, setShowModel] = useState(false);
   const roomId = useMemo(() => generateId(), [showModel]);
@@ -31,7 +32,7 @@ export default function App() {
           path="/"
           element={
             <Home
-              BASE_URI={BASE_URI}
+              FRONTEND_URI={FRONTEND_URI}
               roomId={roomId}
               iscopied={iscopied}
               setIsCopied={setIsCopied}
@@ -41,7 +42,10 @@ export default function App() {
           }
         />
 
-        <Route path="/:roomId" element={<Chatbox BASE_URI={BASE_URI} />} />
+        <Route
+          path="/:roomId"
+          element={<Chatbox BACKEND_URI={BACKEND_URI} />}
+        />
       </Routes>
     </>
   );
