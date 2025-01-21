@@ -54,7 +54,7 @@ export default function Home({
             </span>
           </div>
         </nav>
-        <section className="pt-12 grid grid-cols-2 justify-center items-center h-full max-lg:grid-rows-2 max-sm:pt-28 max-lg:pt-5">
+        <section className="pt-14 grid grid-cols-2 justify-center items-center h-full max-lg:grid-rows-2 max-sm:pt-28 max-lg:pt-5">
           <div className="flex flex-col gap-4 max-lg:col-span-2">
             <h1 className="text-4xl font-medium font-roboto max-sm:text-2xl">
               The easiest way to join and enjoy group conversations
