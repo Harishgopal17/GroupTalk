@@ -5,7 +5,7 @@ import Home from "./components/Home";
 
 export default function App() {
   const BACKEND_URI = "https://grouptalk-backend.onrender.com";
-  const FRONTEND_URI = "https://joingrouptalk.netlify.app/";
+  const FRONTEND_URI = "https://joingrouptalk.netlify.app";
   const [iscopied, setIsCopied] = useState(false);
   const [showModel, setShowModel] = useState(false);
   const roomId = useMemo(() => generateId(), [showModel]);

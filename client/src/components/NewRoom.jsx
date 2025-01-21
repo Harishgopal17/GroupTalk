@@ -14,7 +14,7 @@ export default function NewRoom({
   // const [iscopied, setIsCopied] = useState(false);
 
   function handleCopy() {
-    const textToCopy = `${BASE_URI}/${roomId}`;
+    const textToCopy = `${FRONTEND_URI}/${roomId}`;
     navigator.clipboard
       .writeText(textToCopy)
       .then(() => {
