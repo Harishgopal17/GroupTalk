@@ -80,8 +80,8 @@ export default function Home({
 
                 <button
                   onClick={() => navigate(`/${joiningId}`)}
-                  className={`text-lg font-medium text-[#a5a2a2] max-sm:text-base ${
-                    joiningId.length > 0 && "text-[#494646]"
+                  className={`text-lg font-medium  max-sm:text-base ${
+                    joiningId.length > 0 ? "text-black" : "text-[#a5a2a2]"
                   }`}
                 >
                   Join
