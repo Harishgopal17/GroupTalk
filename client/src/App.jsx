@@ -35,6 +35,7 @@ export default function App() {
           element={
             <Home
               FRONTEND_URI={FRONTEND_URI}
+              BACKEND_URI={BACKEND_URI}
               roomId={roomId}
               iscopied={iscopied}
               setIsCopied={setIsCopied}

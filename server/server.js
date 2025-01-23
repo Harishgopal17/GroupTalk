@@ -11,6 +11,11 @@ const app = express();
 app.use(cors());
 
 const server = http.createServer(app);
+
+app.get('/ping', (req, res) => {
+  res.status(200).json({ message: 'Server is alive!' });
+});
+
 const io = new Server(server, {
   connectionStateRecovery: {},
   cors: {

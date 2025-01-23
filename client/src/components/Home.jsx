@@ -6,6 +6,7 @@ import groupDiscussion from "./../assets/groupDiscussion.svg";
 
 export default function Home({
   FRONTEND_URI,
+  BACKEND_URI,
   roomId,
   showModel,
   setShowModel,
@@ -15,6 +16,8 @@ export default function Home({
   const [time, setTime] = useState(new Date());
   const [joiningId, setJoiningId] = useState("");
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     const interval = setInterval(() => {
       setTime(new Date());
@@ -22,7 +25,25 @@ export default function Home({
     return () => clearInterval(interval);
   }, []);
 
-  const navigate = useNavigate();
+  useEffect(() => {
+    const pingBackend = async () => {
+      try {
+        const res = await fetch(`${BACKEND_URI}/ping`);
+        const data = await res.json();
+        console.log(data.message);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    pingBackend();
+
+    const pingInterval = setInterval(() => {
+      pingBackend();
+    }, 840000);
+
+    return () => clearInterval(pingInterval);
+  }, []);
 
   return (
     <>
@@ -77,15 +98,18 @@ export default function Home({
                   onChange={(e) => setJoiningId(e.target.value)}
                   className="px-4 py-3 border-2 border-[#7e7575] rounded-3xl text-lg font-normal outline-none max-sm:text-sm max-sm:px-3 max-sm:py-2 focus:border-[#bdb9b9] transition-all duration-300"
                 />
-
-                <button
-                  onClick={() => navigate(`/${joiningId}`)}
-                  className={`text-lg font-medium  max-sm:text-base ${
-                    joiningId.length >= 11 ? "text-black" : "text-[#a5a2a2]"
-                  }`}
-                >
-                  Join
-                </button>
+                {joiningId.length >= 11 ? (
+                  <button
+                    onClick={() => navigate(`/${joiningId}`)}
+                    className="text-lg font-medium  max-sm:text-base text-black"
+                  >
+                    Join
+                  </button>
+                ) : (
+                  <button className="text-lg font-medium cursor-auto max-sm:text-base text-[#a5a2a2]">
+                    Join
+                  </button>
+                )}
               </div>
             </div>
           </div>
